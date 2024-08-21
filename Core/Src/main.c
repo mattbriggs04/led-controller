@@ -100,6 +100,12 @@ int main(void)
   HAL_Delay(1000);
   startup_led();
   HAL_Delay(1500);
+  fx_change_color(255, 255, 255);
+  HAL_Delay(1000);
+  reset_led();
+  fx_build(255, 255, 255, 15);
+  reset_led();
+  fx_build_inverted(255, 255, 255, 15);
   /* USER CODE END 2 */
 
   /* Infinite loop */
