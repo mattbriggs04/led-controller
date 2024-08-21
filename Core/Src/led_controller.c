@@ -62,6 +62,7 @@ static void send_data(int led_colors[NUM_LEDS][3]) {
 	HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_2, (uint32_t*) pwm_data, DATA_SIZE * NUM_LEDS + RST_CODE_LENGTH);
 }
 
+// reset, startup animation (confirms LEDs are working)
 void reset_led() {
 	int led_colors[NUM_LEDS][3] = {0};
 
@@ -74,9 +75,12 @@ void reset_led() {
 void startup_led() {
 	fx_led_chaser(255, 255, 255, 15);
 	HAL_Delay(1);
-	reset_led();
+	reset_led(); // turn LEDs off
 }
 
+// Effects functions
+
+// Creates a snake of LEDs that go forward and back along the LEDs
 void fx_led_chaser(int g, int r, int b, int speed) {
 	int led_colors[NUM_LEDS][3] = {0};
 
@@ -97,5 +101,36 @@ void fx_led_chaser(int g, int r, int b, int speed) {
 		send_data(led_colors);
 		HAL_Delay(speed);
 	}
-
 }
+
+// Change color of all LEDs
+void fx_change_color(int g, int r, int b) {
+	int led_colors[NUM_LEDS][3] = {0};
+	for(int i = 0; i < NUM_LEDS; i++) {
+		set_color(g, r, b, i, led_colors);
+	}
+	send_data(led_colors);
+}
+
+// "builds" all LEDs on, one at a time at speed (in ms) from the start
+void fx_build(int g, int r, int b, int speed) {
+	int led_colors[NUM_LEDS][3] = {0};
+
+	for(int i = 0; i < NUM_LEDS; i++) {
+		set_color(g, r, b, i, led_colors);
+		send_data(led_colors);
+		HAL_Delay(speed);
+	}
+}
+
+// "builds" all LEDs on, starting from the last LED at speed (in ms)
+void fx_build_inverted(int g, int r, int b, int speed) {
+	int led_colors[NUM_LEDS][3] = {0};
+
+	for(int i = NUM_LEDS - 1; i >= 0; i--) {
+		set_color(g, r, b, i, led_colors);
+		send_data(led_colors);
+		HAL_Delay(speed);
+	}
+}
+

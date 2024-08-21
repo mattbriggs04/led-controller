@@ -1,6 +1,9 @@
 ../Core/Src/led_controller.c:10:13:check_color_bounds	24	static
 ../Core/Src/led_controller.c:21:13:set_color	24	static
 ../Core/Src/led_controller.c:33:13:send_data	3016	static
-../Core/Src/led_controller.c:65:6:reset_led	744	static
-../Core/Src/led_controller.c:74:6:startup_led	8	static
-../Core/Src/led_controller.c:80:6:fx_led_chaser	768	static
+../Core/Src/led_controller.c:66:6:reset_led	744	static
+../Core/Src/led_controller.c:75:6:startup_led	8	static
+../Core/Src/led_controller.c:84:6:fx_led_chaser	768	static
+../Core/Src/led_controller.c:107:6:fx_change_color	760	static
+../Core/Src/led_controller.c:116:6:fx_build	768	static
+../Core/Src/led_controller.c:127:6:fx_build_inverted	768	static
