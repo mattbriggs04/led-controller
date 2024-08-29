@@ -5,14 +5,19 @@ This project focused on using STM32's HAL in order to communicate with programma
 
 ### You will need:
 1. STM32CubeIDE
-2. A STM32 Microcontroller (NUCLEO-F303k8 will
+2. A STM32 Microcontroller (NUCLEO-F303k8 is what I used for this project)
+3. A level shifter (can be built on a breadboard, or bought online)
 
-### Descriptions
+### Description
 In order to use this project, you will need STM32CubeIDE / CubeMX (they are a combined software now) in order to run the program and communicate with an STM32 device. This software can be installed at the [STM32CubeIDE Installation Site](https://www.st.com/en/development-tools/stm32cubeide.html).
 
-I used a F303k8 microcontroller in order to output, however any STM32 microcontroller will work, as long as there is an understanding in the math that goes behind the clock configurations. A tutorial may be released at some point discussing the math and intuition behind how this project was made.
+I used a F303k8 microcontroller in order to output, however any STM32 microcontroller will work, as long as there is an understanding in the math that goes behind the clock configurations. <em>If you choose not to use the F303k8, the IOC file will not be configured correctly.</em>
 
 ## Installation
+### Hardware
+STM32 runs on 3.3V logic, while according to the WS2812b1 datasheet, the data input needs to be 5V. A solution to this is a level shifter, which I made build my own on a breadboard. See ``` They can also be found online.
+
+### Software
 1. Ensure you have STM32CubeIDE set up. See Prerequisites.
 2. Run ```git clone <url>``` (The url can be found in the ```Code < >``` button at the top of the repo).
 3. A folder named led-controller should have been created. Inside of it should be a folder WS2812B_Controller/. Open this with STM32CubeIDE.
@@ -20,7 +25,12 @@ I used a F303k8 microcontroller in order to output, however any STM32 microcontr
 5. Set the root directory to the WS2812B_Controller folder.
 6. Click Finish
 7. Click the hammer button at the top to ensure that the console prints out "0 errors, 0 warnings."
-8. Now, click the run button to run the program.
+8. Now, click the run button. A debug config page will show up, click "OK".
+9. The program should run.
 
 ## License
 Distributed under the MIT License. See the ```LICENSE.txt``` file for more information.
+
+# Resources
+* [WS2812b Datasheet](https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf)
+* 
