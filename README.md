@@ -1,23 +1,25 @@
-# WS2812b LED Controller with STM32 Microcontroller
-This project focused on using STM32's CubeIDE and CubeMX in order to communicate with programmable LED lights (WS2812b). If you choose to use a different programmable LED, review with the data sheet in order to get accurate information on how data is to be sent. The LED Controller is abstracted into many easy-to-use functions, all of which start with fx_. Goals of this project were to create an easy-to-use, beginner friendly led-controller, which simultaneously served as a learning experience. 
+# WS2812b LED Controller with STM32 NUCLEO-F303k8
+This project focused on using STM32's CubeIDE and CubeMX in order to communicate with programmable LED lights (WS2812b). Data is send using DMA with PWM to output data, while bitwise operators are used to manipulate rgb and hex codes into the correct format, which can also be put into an array. This allows one color to correspond to one array index. The LED Controller is abstracted into many easy-to-use functions, all of which start with fx_. Goals of this project were to create an easy-to-use, beginner friendly led-controller, which simultaneously served as a learning experience. The code can be refactored to work with any STM32 microcontroller, or even a different type of programmable LEDs, but requires an ability to comprehend data sheets and navigate clock configurations.
 
 ## Prerequisites
 
 ### You will need:
 1. STM32CubeIDE
 2. A STM32 Microcontroller (NUCLEO-F303k8 is what I used for this project)
-3. A level shifter (can be built on a breadboard, or bought online)
+3. A 3V3->5V level shifter (can be built on a breadboard or bought online)
 
-### Description
-In order to use this project, you will need STM32CubeIDE / CubeMX (they are a combined software now) in order to run the program and communicate with an STM32 device. This software can be installed at the [STM32CubeIDE Installation Site](https://www.st.com/en/development-tools/stm32cubeide.html).
+### Important Notes
+* In order to use this project, you will need STM32CubeIDE / CubeMX in order to run the program and communicate with an STM32 device. This software can be installed at the [STM32CubeIDE Installation Site](https://www.st.com/en/development-tools/stm32cubeide.html).
 
-I used a F303k8 microcontroller in order to output, however any STM32 microcontroller will work, as long as there is an understanding in the math that goes behind the clock configurations. <em>If you choose not to use the F303k8, the IOC file will not be configured correctly.</em>
+* I used an F303k8 microcontroller in order to output data, however any STM32 microcontroller will work, as long as there is an understanding in the math that goes behind the clock configurations. <em>If you choose not to use the F303K8, the IOC file will not be configured correctly.</em>
 
 ## Installation
 ### Hardware
-STM32 runs on 3.3V logic, while according to the WS2812b1 datasheet, the data input needs to be 5V. A solution to this is a level shifter, which I made build my own on a breadboard. See ```logic_level_shifter.asc``` which was made in LTspice. Level shifters can be found for cheap online as well.
+STM32 runs on 3V3 logic, while according to the [WS2812b Datasheet](https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf), the data input needs to be 5V. A solution to this is a level shifter. For my setup, I built a simple one on a breadboard. See the ```logic_level_shifter.asc``` schematic, which was made in LTspice. Level shifters can also be found for cheap online. 
 
-The F303k8 IOC file uses <b>PA9</b> to output PWM signals. This can be found on page 30 of the [F303k8 User Manual](https://www.st.com/resource/en/user_manual/dm00231744-stm32-nucleo-32-boards-mb1180-stmicroelectronics.pdf).
+<b>Useful note:</b> the F303K8, and other STM32 microcontrollers, has a +5V and a +3V3 power supply pin, which can be used to make the level shifter. This way, the level shifter can be built with just the microcontroller, an N-MOSFET, and two 1k resistors.
+
+The F303K8 IOC file outlines that <b>PA9</b> is used to output PWM signals. Be sure that a connection is made to the right output port. The location of any port can be found on page 30 of the [F303k8 User Manual](https://www.st.com/resource/en/user_manual/dm00231744-stm32-nucleo-32-boards-mb1180-stmicroelectronics.pdf).
 ### Software
 1. Ensure you have STM32CubeIDE set up and necessary hardware. See Prerequisites.
 2. Run ```git clone <url>``` (The url can be found in the ```Code < >``` button at the top of the repo).
