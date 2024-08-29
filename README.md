@@ -15,7 +15,7 @@ I used a F303k8 microcontroller in order to output, however any STM32 microcontr
 
 ## Installation
 ### Hardware
-STM32 runs on 3.3V logic, while according to the WS2812b1 datasheet, the data input needs to be 5V. A solution to this is a level shifter, which I made build my own on a breadboard. See ``` They can also be found online.
+STM32 runs on 3.3V logic, while according to the WS2812b1 datasheet, the data input needs to be 5V. A solution to this is a level shifter, which I made build my own on a breadboard. See ```logic_level_shifter.asc``` which was made in LTspice. Level shifters can be found for cheap online as well.
 
 ### Software
 1. Ensure you have STM32CubeIDE set up. See Prerequisites.
