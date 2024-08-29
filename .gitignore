@@ -31,7 +31,6 @@ Debug
 # CDT- autotools
 .autotools
 
-
 # sbteclipse plugin
 .target
 

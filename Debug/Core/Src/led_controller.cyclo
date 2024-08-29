@@ -1,9 +1,0 @@
-../Core/Src/led_controller.c:10:13:check_color_bounds	7
-../Core/Src/led_controller.c:21:13:set_color	2
-../Core/Src/led_controller.c:33:13:send_data	5
-../Core/Src/led_controller.c:66:6:reset_led	2
-../Core/Src/led_controller.c:75:6:startup_led	1
-../Core/Src/led_controller.c:84:6:fx_led_chaser	5
-../Core/Src/led_controller.c:107:6:fx_change_color	2
-../Core/Src/led_controller.c:116:6:fx_build	2
-../Core/Src/led_controller.c:127:6:fx_build_inverted	2
