@@ -6,6 +6,7 @@
  */
 #include "main.h"
 #include "led_controller.h"
+#include <stdio.h>
 
 static void check_color_bounds(int* green, int* red, int* blue) {
 	if(*green > 255) *green = 255;
@@ -62,7 +63,13 @@ static void send_data(int led_colors[NUM_LEDS][3]) {
 	HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_2, (uint32_t*) pwm_data, DATA_SIZE * NUM_LEDS + RST_CODE_LENGTH);
 }
 
-// reset, startup animation (confirms LEDs are working)
+
+
+/* ************************************************
+ *
+ *  REDACTED FOR HEX VERSION (SCROLL DOWN) ********
+ *
+ * ************************************************
 void reset_led() {
 	int led_colors[NUM_LEDS][3] = {0};
 
@@ -70,7 +77,7 @@ void reset_led() {
 		set_color(0, 0, 0, i, led_colors);
 	}
 	send_data(led_colors);
-}
+} */
 
 void startup_led() {
 	fx_led_chaser(255, 255, 255, 15);
@@ -133,4 +140,54 @@ void fx_build_inverted(int g, int r, int b, int speed) {
 		HAL_Delay(speed);
 	}
 }
+
+// Hex functions
+static void send_data_hex(uint32_t colors[NUM_LEDS]) {
+	uint16_t pwm_data[DATA_SIZE * NUM_LEDS + RST_CODE_LENGTH] = {0};
+
+	int running_idx = 0;
+	for(int i = 0; i < NUM_LEDS; i++) { // For each color
+		for(int j = DATA_SIZE - 1; j >= 0; j--) { // For every 24 bits in each color
+			// If bit = 1, use CODE_1, else (bit = 0) use CODE_0
+			pwm_data[running_idx] = (colors[i] & (1 << j)) ? CODE_1_COMPARE : CODE_0_COMPARE;
+			running_idx++;
+		}
+	}
+
+	// Note: the RESET portion of the data should already be 0 due to pwm_data initialization
+
+	HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_2, (uint32_t*) pwm_data, DATA_SIZE * NUM_LEDS + RST_CODE_LENGTH);
+}
+
+static uint32_t grb_to_rgb(uint32_t color) {
+	return ((color & (0xff << 8)) << 8) | ((color & (0xff << 16)) >> 8)| (color & 0xff);
+}
+void reset_led() {
+	uint32_t colors[NUM_LEDS] = {0};
+	send_data_hex(colors);
+	HAL_Delay(50);
+}
+
+void fx_change_color_hex(uint32_t color) {
+	color = grb_to_rgb(color);
+	uint32_t colors[NUM_LEDS];
+	for(int i = 0; i < NUM_LEDS; i++) {
+		colors[i] = color;
+	}
+	send_data_hex(colors);
+}
+
+void fx_led_chaser_hex(uint32_t color) {
+	color = grb_to_rgb(color);
+	uint32_t colors[NUM_LEDS] = {0};
+	for(int i = 0; i < NUM_LEDS; i++) {
+		colors[i] = color;
+		if(i >= 10) {
+			colors[i - 10] = 0;
+		}
+		send_data_hex(colors);
+		HAL_Delay(50);
+	}
+}
+
 
