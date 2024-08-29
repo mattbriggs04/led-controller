@@ -6,7 +6,6 @@
  */
 #include "main.h"
 #include "led_controller.h"
-#include <stdio.h>
 
 static void check_color_bounds(int* green, int* red, int* blue) {
 	if(*green > 255) *green = 255;
@@ -62,22 +61,6 @@ static void send_data(int led_colors[NUM_LEDS][3]) {
 	// Start the DMA
 	HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_2, (uint32_t*) pwm_data, DATA_SIZE * NUM_LEDS + RST_CODE_LENGTH);
 }
-
-
-
-/* ************************************************
- *
- *  REDACTED FOR HEX VERSION (SCROLL DOWN) ********
- *
- * ************************************************
-void reset_led() {
-	int led_colors[NUM_LEDS][3] = {0};
-
-	for(int i = 0; i < NUM_LEDS; i++) {
-		set_color(0, 0, 0, i, led_colors);
-	}
-	send_data(led_colors);
-} */
 
 void startup_led() {
 	fx_led_chaser(255, 255, 255, 15);
@@ -162,6 +145,7 @@ static void send_data_hex(uint32_t colors[NUM_LEDS]) {
 static uint32_t grb_to_rgb(uint32_t color) {
 	return ((color & (0xff << 8)) << 8) | ((color & (0xff << 16)) >> 8)| (color & 0xff);
 }
+
 void reset_led() {
 	uint32_t colors[NUM_LEDS] = {0};
 	send_data_hex(colors);

@@ -104,6 +104,18 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	/*
+	 * Un-comment these lines to run a basic test:
+	 */
+//	 fx_change_color_hex(0xffffff); // changes color to white
+//	 HAL_Delay(1000); // delay 1 second
+//	 fx_change_color_hex(0xff0000); // changes color to red
+//	 HAL_Delay(1000); // delay 1 second
+//	 fx_change_color_hex(0x00ff00); // changes color to green
+//	 HAL_Delay(1000); // delay 1 second
+//	 fx_change_color_hex(0x0000ff); // changes color to blue
+//	 HAL_Delay(1000); // delay 1 second
+	 // end test
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
   }
