@@ -10,6 +10,9 @@ local.properties
 .loadpath
 .recommenders
 
+# Debug
+Debug
+
 # MacOS specific
 .DS_Store
 
@@ -28,11 +31,6 @@ local.properties
 # CDT- autotools
 .autotools
 
-# Java annotation processor (APT)
-.factorypath
-
-# PDT-specific (PHP Development Tools)
-.buildpath
 
 # sbteclipse plugin
 .target
@@ -52,12 +50,3 @@ local.properties
 # Annotation Processing
 .apt_generated/
 .apt_generated_test/
-
-# Scala IDE specific (Scala & Java development for Eclipse)
-.cache-main
-.scala_dependencies
-.worksheet
-
-# Uncomment this line if you wish to ignore the project description file.
-# Typically, this file would be tracked if it contains build/dependency configurations:
-#.project
