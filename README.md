@@ -8,4 +8,4 @@ In order to use this project, you will need STM32CubeIDE / CubeMX (they are a co
 [STM32CubeIDE Installation Site](https://www.st.com/en/development-tools/stm32cubeide.html)
 
 
-I used a F303k8 microcontroller in order to output, however any will work, as long as there is an understanding in the math that goes behind clock configurations.
+I used a F303k8 microcontroller in order to output, however any STM32 microcontroller will work, as long as there is an understanding in the math that goes behind the clock configurations.
