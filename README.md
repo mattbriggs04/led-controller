@@ -5,7 +5,7 @@ This project focused on using STM32's HAL in order to communicate with programma
 ## Prerequisites
 
 In order to use this project, you will need STM32CubeIDE / CubeMX (they are a combined software now) in order to run the program and communicate with an STM32 device.
-(STM32CubeIDE Installation Site)[https://www.st.com/en/development-tools/stm32cubeide.html]
+[STM32CubeIDE Installation Site](https://www.st.com/en/development-tools/stm32cubeide.html)
 
 
 I used a F303k8 microcontroller in order to output, however any will work, as long as there is an understanding in the math that goes behind clock configurations.
