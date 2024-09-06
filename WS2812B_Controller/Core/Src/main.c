@@ -98,12 +98,16 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
+
+//  reset_led(); Code intended to not run in the while loop can be added here (such as resetting the LEDs)
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
 	/*
 	 * Un-comment these lines to run a basic test:
 	 */
@@ -116,6 +120,7 @@ int main(void)
 //	 fx_change_color_hex(0x0000ff); // changes color to blue
 //	 HAL_Delay(1000); // delay 1 second
 	 // end test
+
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
   }
