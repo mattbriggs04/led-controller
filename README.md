@@ -17,6 +17,8 @@ This project focused on using STM32's CubeIDE and CubeMX in order to communicate
 ### Hardware
 STM32 runs on 3V3 logic, while according to the [WS2812b Datasheet](https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf), the data input needs to be 5V. A solution to this is a level shifter. For my setup, I built a simple one on a breadboard. See the ```logic_level_shifter.asc``` schematic, which was made in LTspice. Level shifters can also be found for cheap online. 
 
+WORK IN PROGRESS: The KiCad designs in the hardware folder are currently a work in progress. The plan is to create a PCB that mounts the F303k8, level shifter, and an on-off button / reset switch, as well as a header that the WS2812b lights can plug into.
+
 <b>Useful note:</b> the F303K8, and other STM32 microcontrollers, has a +5V and a +3V3 power supply pin, which can be used to make the level shifter. This way, the level shifter can be built with just the microcontroller, an N-MOSFET, and two 1k resistors.
 
 The F303K8 IOC file outlines that <b>PA9</b> is used to output PWM signals. Be sure that a connection is made to the right output port. The location of any port can be found on page 30 of the [F303k8 User Manual](https://www.st.com/resource/en/user_manual/dm00231744-stm32-nucleo-32-boards-mb1180-stmicroelectronics.pdf).
