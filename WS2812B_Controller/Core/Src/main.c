@@ -98,8 +98,7 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-
-//  reset_led(); Code intended to not run in the while loop can be added here (such as resetting the LEDs)
+//  startup_led(); // Code intended to not run in the while loop can be added here (such as running a basic startup for the LEDs)
 
   /* USER CODE END 2 */
 
@@ -107,7 +106,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
 	/*
 	 * Un-comment these lines to run a basic test:
 	 */

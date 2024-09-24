@@ -7,124 +7,42 @@
 #include "main.h"
 #include "led_controller.h"
 
-/*
-* TODO: convert rgb to be wrappers for all the hex functions, convert grb -> hex grb -> call respective hex function
-*/
-static void check_color_bounds(int* green, int* red, int* blue) {
-	if(*green > 255) *green = 255;
-	else if (*green < 0) *green = 0;
 
-	if(*red > 255) *red = 255;
-	else if (*red < 0) *red = 0;
-
-	if(*blue > 255) *blue = 255;
-	else if (*blue < 0) *blue = 0;
+// Helper functions
+static uint32_t rgb_to_hex(uint8_t r, uint8_t g, uint8_t b) {
+	return (r << 16) | (g << 8) | b;
 }
 
-static void set_color(int green, int red, int blue, int led_idx, int led_colors[NUM_LEDS][3]) {
-	// Verify all color values are between 0 and 255 and led_num is in bounds
-	check_color_bounds(&green, &red, &blue);
-	if (led_idx > NUM_LEDS - 1) {
-		led_idx = NUM_LEDS - 1;
-	}
-
-	led_colors[led_idx][0] = green;
-	led_colors[led_idx][1] = red;
-	led_colors[led_idx][2] = blue;
+static uint32_t grb_to_rgb(uint32_t color) {
+	// Takes the red and green components of a GRB formatted color and swaps them, returning an RGB (or vice versa)
+	return ((color & (0xff << 8)) << 8) | ((color & (0xff << 16)) >> 8)| (color & 0xff);
 }
 
-static void send_data(int led_colors[NUM_LEDS][3]) {
-	uint16_t pwm_data[(DATA_SIZE * NUM_LEDS) + RST_CODE_LENGTH];
-	// each color is 3 bytes = 24 bits (Green byte | Red byte | Blue byte for WS2812b)
-	uint32_t color = 0;
-	int running_idx = 0; // accumulating index to continually add to pwm_data
-
-	for(int j = 0; j < NUM_LEDS; j++) {
-		// create GRB color from each byte of led_colors
-		color = (led_colors[j][0] << 16) | (led_colors[j][1] << 8) | (led_colors[j][2]);
-
-		// Put a code 1 into pwm stream if bit = 1, and code 0 if bit = 0
-		for(int i = DATA_SIZE - 1; i >= 0; i--) {
-			if(color & (1 << i)) {
-				pwm_data[running_idx] = CODE_1_COMPARE;
-			}
-			else {
-				pwm_data[running_idx] = CODE_0_COMPARE;
-			}
-			running_idx++;
-		}
-	}
-
-	// Ensure the reset code is implemented -> should go low for > 50us
-	for(int i = 0; i < RST_CODE_LENGTH; i++) {
-		pwm_data[running_idx] = 0;
-		running_idx++;
-	}
-
-	// Start the DMA
-	HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_2, (uint32_t*) pwm_data, DATA_SIZE * NUM_LEDS + RST_CODE_LENGTH);
-}
-
+// RGB functions
 void startup_led() {
-	fx_led_chaser(255, 255, 255, 15);
+	fx_led_chaser_hex_extended(0xffffff, 15, NUM_LEDS / 3);
 	HAL_Delay(1);
 	reset_led(); // turn LEDs off
 }
 
-// Effects functions
-
-// Creates a snake of LEDs that go forward and back along the LEDs
-void fx_led_chaser(int g, int r, int b, int speed) {
-	int led_colors[NUM_LEDS][3] = {0};
-
-
-	for(int i = 0; i < NUM_LEDS; i++) {
-		set_color(g, r, b, i, led_colors);
-		if(i >= 10) {
-			set_color(0, 0, 0, i - 10, led_colors);
-		}
-		send_data(led_colors);
-		HAL_Delay(speed);
-	}
-	for(int i = NUM_LEDS - 10; i >= 0; i--) {
-		set_color(g, r, b, i, led_colors);
-		if(i < NUM_LEDS - 10) {
-			set_color(0, 0, 0, i + 10, led_colors);
-		}
-		send_data(led_colors);
-		HAL_Delay(speed);
-	}
+// Creates a snake of LEDs that go along the LEDs
+void fx_led_chaser(uint8_t r, uint8_t g, uint8_t b) {
+	fx_led_chaser_hex(rgb_to_hex(r, g, b));
 }
 
-// Change color of all LEDs
-void fx_change_color(int g, int r, int b) {
-	int led_colors[NUM_LEDS][3] = {0};
-	for(int i = 0; i < NUM_LEDS; i++) {
-		set_color(g, r, b, i, led_colors);
-	}
-	send_data(led_colors);
+// Change color of all LEDs (at high NUM_LEDs (>30), color may change if 5V is only applied at one end).
+void fx_change_color(uint8_t g, uint8_t r, uint8_t b) {
+	fx_change_color_hex(rgb_to_hex(r, g, b));
 }
 
 // "builds" all LEDs on, one at a time at speed (in ms) from the start
-void fx_build(int g, int r, int b, int speed) {
-	int led_colors[NUM_LEDS][3] = {0};
-
-	for(int i = 0; i < NUM_LEDS; i++) {
-		set_color(g, r, b, i, led_colors);
-		send_data(led_colors);
-		HAL_Delay(speed);
-	}
+void fx_build(uint8_t g, uint8_t r, uint8_t b) {
+	fx_build_hex(rgb_to_hex(r, g, b));
 }
 
 // "builds" all LEDs on, starting from the last LED at speed (in ms)
-void fx_build_inverted(int g, int r, int b, int speed) {
-	int led_colors[NUM_LEDS][3] = {0};
-
-	for(int i = NUM_LEDS - 1; i >= 0; i--) {
-		set_color(g, r, b, i, led_colors);
-		send_data(led_colors);
-		HAL_Delay(speed);
-	}
+void fx_build_inverted(uint8_t g, uint8_t r, uint8_t b) {
+	fx_build_inverted_hex(rgb_to_hex(r, g, b));
 }
 
 // Hex functions
@@ -147,9 +65,6 @@ static void send_data_hex(uint32_t colors[NUM_LEDS]) {
 
 // WS2812b lights will light up GRB rather than RGB
 // this functions converts the users input (GRB) to be RGB on the lights
-static uint32_t grb_to_rgb(uint32_t color) {
-	return ((color & (0xff << 8)) << 8) | ((color & (0xff << 16)) >> 8)| (color & 0xff);
-}
 
 void reset_led() {
 	uint32_t colors[NUM_LEDS] = {0};
@@ -200,7 +115,20 @@ void fx_build_hex_extended(uint32_t color, uint32_t update_speed_ms) {
 }
 
 void fx_build_hex(uint32_t color) {
-	fx_build_hex_extended(color, 75);
+	fx_build_hex_extended(color, DEFAULT_SPEED);
+}
+
+void fx_build_inverted_hex_extended(uint32_t color, uint32_t update_speed_ms) {
+	uint32_t colors[NUM_LEDS] = {0};
+	for(int i = NUM_LEDS - 1; i >= 0; i--) {
+		colors[i] = color;
+		send_data_hex(colors);
+		HAL_Delay(update_speed_ms);
+	}
+}
+
+void fx_build_inverted_hex(uint32_t color) {
+	fx_build_inverted_hex_extended(color, DEFAULT_SPEED);
 }
 
 
