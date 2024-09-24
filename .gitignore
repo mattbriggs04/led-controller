@@ -10,6 +10,12 @@ local.properties
 .loadpath
 .recommenders
 
+# KiCad Files
+led_hardware/*.raw
+led_hardware/*.log
+led_hardware-backups/
+fp-info-cache
+
 # Debug
 Debug/
 
