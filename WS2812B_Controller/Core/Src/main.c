@@ -120,6 +120,7 @@ int main(void)
 	 // end test
 
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
