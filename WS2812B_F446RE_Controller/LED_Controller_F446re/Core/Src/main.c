@@ -37,17 +37,14 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 #define DATA_SIZE 24
-#define RST_CODE_LENGTH 50
-#define CODE_1_COMPARE 153
+#define RST_CODE_LENGTH (3*24)
+#define CODE_1_COMPARE 154
 #define CODE_0_COMPARE 72
 #define NUM_LEDS 60
-bool toggle_led = false;
-uint32_t selected_color = 0xff0000;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim1;
-TIM_HandleTypeDef htim7;
 DMA_HandleTypeDef hdma_tim1_ch1;
 DMA_HandleTypeDef hdma_tim1_ch3;
 
@@ -63,10 +60,10 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM1_Init(void);
-static void MX_TIM7_Init(void);
 /* USER CODE BEGIN PFP */
 static void send_data_hex(uint32_t colors[NUM_LEDS]);
 void change_led_color(uint32_t color);
+void led_chaser(uint32_t color);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -105,26 +102,26 @@ int main(void)
   MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_TIM1_Init();
-  MX_TIM7_Init();
-  HAL_TIM_Base_Start_IT(&htim7);
-  /* USER CODE BEGIN 2 */
-  change_led_color(selected_color);
-  HAL_Delay(1000);
-  change_led_color(0xffaabb);
-//  uint32_t colors[NUM_LEDS] = {0};
-//  uint32_t black[NUM_LEDS] = {0};
-//  for(int i = 0; i < NUM_LEDS; i++) {
-//	  colors[i] = 0x00ff00;
-//  }
-//  send_data_hex(colors);
-//  HAL_Delay(5000);
-//  send_data_hex(black);
-  /* USER CODE END 2 */
 
+  /* USER CODE BEGIN 2 */
+  change_led_color(0x000000);
+  uint32_t color1 = 0x440000;
+  uint32_t color2 = 0x004400;
+  uint32_t color3 = 0x000044;
+  /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  HAL_Delay(2000);
+	  change_led_color(color1);
+	  HAL_Delay(2000);
+	  change_led_color(color2);
+	  HAL_Delay(2000);
+	  change_led_color(color3);
+	  HAL_Delay(4000);
+	  led_chaser(0x444444);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -265,44 +262,6 @@ static void MX_TIM1_Init(void)
 }
 
 /**
-  * @brief TIM7 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM7_Init(void)
-{
-
-  /* USER CODE BEGIN TIM7_Init 0 */
-
-  /* USER CODE END TIM7_Init 0 */
-
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM7_Init 1 */
-
-  /* USER CODE END TIM7_Init 1 */
-  htim7.Instance = TIM7;
-  htim7.Init.Prescaler = 9000-1;
-  htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim7.Init.Period = 5000-1;
-  htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim7, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM7_Init 2 */
-
-  /* USER CODE END TIM7_Init 2 */
-
-}
-
-/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -404,17 +363,6 @@ void change_led_color(uint32_t color) {
 	}
 	send_data_hex(colors);
 }
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
-	if(htim == &htim7) { // using htim7 as blink timer
-		toggle_led = !toggle_led;
-		if(toggle_led) {
-			change_led_color(0x000000); // black
-		}
-		else {
-			change_led_color(selected_color);
-		}
-	}
-}
 static void send_data_hex(uint32_t colors[NUM_LEDS]) {
 	uint16_t pwm_data[DATA_SIZE * NUM_LEDS + RST_CODE_LENGTH] = {0};
 
@@ -431,6 +379,17 @@ static void send_data_hex(uint32_t colors[NUM_LEDS]) {
 
 //	HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_1, (uint32_t*) pwm_data, DATA_SIZE * NUM_LEDS + RST_CODE_LENGTH);
 	HAL_TIMEx_PWMN_Start_DMA(&htim1, TIM_CHANNEL_3, (uint32_t*) pwm_data, DATA_SIZE * NUM_LEDS + RST_CODE_LENGTH);
+}
+void led_chaser(uint32_t color) {
+	uint32_t colors[NUM_LEDS] = {0};
+	for(int i = 0; i < NUM_LEDS; i++) {
+		colors[i] = color;
+		if(i >= 10) {
+			colors[i - 10] = 0;
+		}
+		send_data_hex(colors);
+		HAL_Delay(75);
+	}
 }
 /* USER CODE END 4 */
 
