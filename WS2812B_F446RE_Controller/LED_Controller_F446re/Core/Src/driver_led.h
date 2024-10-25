@@ -19,5 +19,7 @@ extern DMA_HandleTypeDef hdma_tim1_ch3;
 #define __CHANGE_TICK_SPEED(speed) /* timer7 speed = speed */
 
 void led_send_hex(uint32_t colors[NUM_LEDS]);
+void led_change_color(uint32_t color);
+void led_tick_callback();
 
 #endif /* SRC_DRIVER_LED_H_ */
