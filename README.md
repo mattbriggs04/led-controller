@@ -13,6 +13,10 @@ This project focused on using STM32's CubeIDE and CubeMX in order to communicate
 
 * I used an F303k8 microcontroller in order to output data, however any STM32 microcontroller will work, as long as there is an understanding in the math that goes behind the clock configurations. <em>If you choose not to use the F303K8, the IOC file will not be configured correctly.</em>
 
+### WIP Stuff
+* There is a NUCLEO-F446RE folder that now works, although I have been messing around with the implementation, so is not as sound to use yet as the F303K8 one.
+* Planning on making a PCB with KiCAD which compactly combines the level shifter and includes pin headers to mount an F303K8, as well as maybe some other stuff: Bluetooth or LoRA to control the LEDs remotely, more LED headers to control different strips simultaneously.
+
 ## Installation
 ### Hardware
 STM32 runs on 3V3 logic, while according to the [WS2812b Datasheet](https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf), the data input needs to be 5V. A solution to this is a level shifter. For my setup, I built a simple one on a breadboard. See the ```logic_level_shifter.asc``` schematic, which was made in LTspice. Level shifters can also be found for cheap online. 
@@ -21,7 +25,7 @@ WORK IN PROGRESS: The KiCad designs in the hardware folder are currently a work 
 
 <b>Useful note:</b> the F303K8, and other STM32 microcontrollers, has a +5V and a +3V3 power supply pin, which can be used to make the level shifter. This way, the level shifter can be built with just the microcontroller, an N-MOSFET, and two 1k resistors.
 
-The F303K8 IOC file outlines that <b>PA9</b> is used to output PWM signals. Be sure that a connection is made to the right output port. The location of any port can be found on page 30 of the [F303k8 User Manual](https://www.st.com/resource/en/user_manual/dm00231744-stm32-nucleo-32-boards-mb1180-stmicroelectronics.pdf).
+The F303K8 IOC file outlines that <b>PA9</b> is used to output PWM signals. Be sure that a connection is made to the right output pin. The location of any pin can be found on page 30 of the [F303k8 User Manual](https://www.st.com/resource/en/user_manual/dm00231744-stm32-nucleo-32-boards-mb1180-stmicroelectronics.pdf).
 ### Software
 1. Ensure you have STM32CubeIDE set up and necessary hardware. See Prerequisites.
 2. Run ```git clone <url>``` (The url can be found in the ```Code < >``` button at the top of the repo).
