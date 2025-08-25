@@ -1,3 +1,7 @@
+> [!NOTE]
+> Early deprecation warning: This project will be replaced by an ESP32-based wireless controller for LED lights which implement a spectrum analyzer for audio-response.
+> Expected by December 2025 
+
 # WS2812b LED Controller with STM32 NUCLEO-F303k8
 This project focused on using STM32's CubeIDE and CubeMX in order to communicate with programmable LED lights (WS2812b). Data is sent using DMA with PWM to output data. Both hex and RGB color codes are options, and are sent as arrays of colors. This allows one color to correspond to one array index, correspond to one LED, making the code easily scalable. The LED Controller is abstracted into many easy-to-use functions, all of which start with fx_. Goals of this project were to create an easy-to-use, beginner friendly led-controller, which simultaneously served as a learning experience. The code can be refactored to work with any STM32 microcontroller, or even a different type of programmable LEDs, but requires an ability to comprehend data sheets and navigate clock configurations.
 
